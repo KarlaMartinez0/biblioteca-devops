@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Editar' if libro else 'Nuevo' }} libro</title>
+</head>
+<body>
+    <h1>{{ 'Editar libro' if libro else 'Agregar libro' }}</h1>
+    <form method="POST">
+        <label>Título:</label>
+        <input type="text" name="titulo" value="{{ libro.titulo if libro else '' }}" required><br>
+
+        <label>Autor:</label>
+        <input type="text" name="autor" value="{{ libro.autor if libro else '' }}" required><br>
+
+        <label>Género:</label>
+        <input type="text" name="genero" value="{{ libro.genero if libro else '' }}"><br>
+
+        <label>Año:</label>
+        <input type="number" name="anio" value="{{ libro.anio if libro else '' }}"><br>
+
+        <label>Copias:</label>
+        <input type="number" name="copias" value="{{ libro.copias if libro else 1 }}"><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{{ url_for('index') }}">Volver</a>
+</body>
+</html>

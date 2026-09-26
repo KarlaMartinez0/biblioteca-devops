@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca</title>
+</head>
+<body>
+    <h1>📚 Gestión de Biblioteca</h1>
+    <a href="{{ url_for('nuevo') }}">+ Agregar libro</a>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>ID</th><th>Título</th><th>Autor</th><th>Género</th>
+            <th>Año</th><th>Copias</th><th>Acciones</th>
+        </tr>
+        {% for libro in libros %}
+        <tr>
+            <td>{{ libro.id }}</td>
+            <td>{{ libro.titulo }}</td>
+            <td>{{ libro.autor }}</td>
+            <td>{{ libro.genero }}</td>
+            <td>{{ libro.anio }}</td>
+            <td>{{ libro.copias }}</td>
+            <td>
+                <a href="{{ url_for('editar', libro_id=libro.id) }}">Editar</a>
+                <form action="{{ url_for('eliminar', libro_id=libro.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('¿Eliminar este libro?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
