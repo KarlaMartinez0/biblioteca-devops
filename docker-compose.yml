@@ -1,11 +1,6 @@
-version: '3.8'
-
-services:
-  # Servicio Web (Aplicación Flask)
+﻿services:
   web:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
+    build: .
     container_name: app_biblioteca
     ports:
       - "8080:5000"
@@ -20,7 +15,6 @@ services:
     networks:
       - red_biblioteca
 
-  # Servicio Base de Datos (PostgreSQL)
   db:
     image: postgres:15-alpine
     container_name: postgres_biblioteca
