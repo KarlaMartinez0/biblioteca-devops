@@ -7,6 +7,14 @@
 <body>
     <h1>📚 Gestión de Biblioteca</h1>
     <a href="{{ url_for('nuevo') }}">+ Agregar libro</a>
+
+    <form action="{{ url_for('buscar_por_autor') }}" method="GET">
+        <input type="text" name="autor" placeholder="Buscar por autor..." value="{{ filtro_autor or '' }}">
+        <button type="submit">Buscar</button>
+    </form>
+    <a href="{{ url_for('disponibles') }}">Ver solo disponibles</a> |
+    <a href="{{ url_for('index') }}">Ver todos</a>
+
     <table border="1" cellpadding="6">
         <tr>
             <th>ID</th><th>Título</th><th>Autor</th><th>Género</th>

@@ -24,6 +24,15 @@ def get_connection():
     )
 
 
+def validar_libro(titulo, autor):
+    """Valida los datos obligatorios de un libro. Retorna (es_valido, mensaje_error)."""
+    if not titulo or not titulo.strip():
+        return False, "El título no puede estar vacío"
+    if not autor or not autor.strip():
+        return False, "El autor no puede estar vacío"
+    return True, ""
+
+
 @app.route("/")
 def index():
     """Consultar: lista todos los libros."""
@@ -46,6 +55,10 @@ def nuevo():
         anio = request.form.get("anio") or None
         copias = request.form.get("copias") or 1
 
+        valido, mensaje = validar_libro(titulo, autor)
+        if not valido:
+            return render_template("form.html", libro=None, error=mensaje)
+
         conn = get_connection()
         cur = conn.cursor()
         cur.execute(
@@ -64,9 +77,6 @@ def nuevo():
 @app.route("/editar/<int:libro_id>", methods=["GET", "POST"])
 def editar(libro_id):
     """Modificar un registro existente."""
-    conn = get_connection()
-    cur = conn.cursor()
-
     if request.method == "POST":
         titulo = request.form["titulo"]
         autor = request.form["autor"]
@@ -74,6 +84,14 @@ def editar(libro_id):
         anio = request.form.get("anio") or None
         copias = request.form.get("copias") or 1
 
+        valido, mensaje = validar_libro(titulo, autor)
+        if not valido:
+            libro = {"titulo": titulo, "autor": autor, "genero": genero,
+                     "anio": anio, "copias": copias}
+            return render_template("form.html", libro=libro, error=mensaje)
+
+        conn = get_connection()
+        cur = conn.cursor()
         cur.execute(
             "UPDATE libros SET titulo=%s, autor=%s, genero=%s, anio=%s, copias=%s "
             "WHERE id=%s;",
@@ -84,6 +102,8 @@ def editar(libro_id):
         conn.close()
         return redirect(url_for("index"))
 
+    conn = get_connection()
+    cur = conn.cursor()
     cur.execute("SELECT * FROM libros WHERE id=%s;", (libro_id,))
     libro = cur.fetchone()
     cur.close()
@@ -101,6 +121,31 @@ def eliminar(libro_id):
     cur.close()
     conn.close()
     return redirect(url_for("index"))
+
+
+@app.route("/buscar")
+def buscar_por_autor():
+    """Funcionalidad nueva 1: búsqueda de libros por autor."""
+    autor = request.args.get("autor", "")
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM libros WHERE autor ILIKE %s ORDER BY id;", (f"%{autor}%",))
+    libros = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("index.html", libros=libros, filtro_autor=autor)
+
+
+@app.route("/disponibles")
+def disponibles():
+    """Funcionalidad nueva 2: filtro de libros con copias disponibles."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM libros WHERE copias > 0 ORDER BY id;")
+    libros = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("index.html", libros=libros, filtro_disponibles=True)
 
 
 if __name__ == "__main__":

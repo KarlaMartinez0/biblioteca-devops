@@ -6,6 +6,11 @@
 </head>
 <body>
     <h1>{{ 'Editar libro' if libro else 'Agregar libro' }}</h1>
+
+    {% if error %}
+        <p style="color:red;"><strong>{{ error }}</strong></p>
+    {% endif %}
+
     <form method="POST">
         <label>Título:</label>
         <input type="text" name="titulo" value="{{ libro.titulo if libro else '' }}" required><br>
