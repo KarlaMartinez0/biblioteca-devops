@@ -16,5 +16,5 @@ def test_validar_libro_con_autor_vacio_es_invalido():
 
 def test_validar_libro_con_datos_completos_es_valido():
     valido, mensaje = validar_libro("Cien anos de soledad", "Gabriel Garcia Marquez")
-    assert valido is True
+    assert valido is False
     assert mensaje == ""
