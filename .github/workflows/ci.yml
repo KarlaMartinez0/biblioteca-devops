@@ -44,5 +44,10 @@ jobs:
         run: |
           pip install -r app/requerimientos.txt
 
+      - name: Crear tabla de libros en la base de datos de pruebas
+        run: psql -h localhost -U postgres -d biblioteca_test -f db/init.sql
+        env:
+          PGPASSWORD: postgres
+
       - name: Ejecutar pruebas
         run: python -m pytest -v
