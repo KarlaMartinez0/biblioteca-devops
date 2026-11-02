@@ -45,4 +45,4 @@ jobs:
           pip install -r app/requerimientos.txt
 
       - name: Ejecutar pruebas
-        run: pytest -v
+        run: python -m pytest -v
